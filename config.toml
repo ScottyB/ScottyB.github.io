@@ -1,4 +1,4 @@
-baseURL = 'https://scottnbarnett.com/'
+baseURL = 'https://scottyb.github.io/'
 languageCode = 'en-us'
 title = 'Scott Barnett'
 theme = "hugo-initio"
