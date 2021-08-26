@@ -1,0 +1,79 @@
+baseURL = 'https://scottnbarnett.com/'
+languageCode = 'en-us'
+title = 'Scott Barnett'
+theme = "hugo-initio"
+
+[params]
+    name = "Scott Barnett"
+    description = "Technologist, Researcher and Engineer"
+    email = "scottnbarnett@gmail.com"
+    # phone = "+234 23 9873237"
+    # address = "234 Hidden Pond Road, Ashland City, TN 37015"
+    year = 2021
+    avatar = "images/scott.jpeg"
+    avatarclass = "circle"
+    background = ""
+    banner = "images/washed-ai.png"
+    favicon = "images/favicon-scott.jpeg"
+    DateForm = "January 2, 2006"
+    author = "Sergey Pozhilov (GetTemplate.com)"
+
+    showSubheader = true
+    showServices = true
+    showRecentWorks = true
+    showDownloads = true
+    showClients = true
+
+    showFooterContact = true
+    showFooterFollowMe = false
+    showFooterTextWidget = false
+    showFooterFormWidget = false
+
+[[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  
+# [[menu.main]]
+#     name = "blog"
+#     url = "/post/"
+#     weight = 5
+
+# [params.disqus]
+#     site = "hugo-initio-site.disqus.com"
+
+# [params.sharethis]
+#     property = "123456789012345678901234"
+#     custom = true
+
+# [params.google.analytics]
+#     trackerID = "GA-000000000-0"
+
+[[params.social]]
+	title = "twitter"
+	url = "https://twitter.com/nickname"
+    icon = "fab fa-twitter-square"
+    footer = true
+    sharethis = true
+    network = "twitter"
+[[params.social]]
+	title = "linkedin"
+	url = "https://www.linkedin.com/in/nickname"
+    icon = "fab fa-linkedin"
+    footer = false
+    sharethis = true
+    network = "linkedin"
+[[params.social]]
+	title = "github"
+	url = "https://github.com/nickname"
+    icon = "fab fa-github"
+    footer = true
+    sharethis = false
+    network = ""
+[[params.social]]
+	title = "email"
+	url = "mailto:scottnbarnett@gmail.com"
+    icon = "fas fa-envelope-square"
+    footer = false
+    sharethis = true
+    network = "email"
