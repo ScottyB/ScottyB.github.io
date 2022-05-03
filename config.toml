@@ -46,8 +46,8 @@ theme = "hugo-initio"
 #     property = "123456789012345678901234"
 #     custom = true
 
-# [params.google.analytics]
-#     trackerID = "GA-000000000-0"
+[params.google.analytics]
+    trackerID = "G-FZ67J77C3E"
 
 [[params.social]]
 	title = "twitter"
