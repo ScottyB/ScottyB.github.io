@@ -6,7 +6,7 @@ theme = "hugo-initio"
 [params]
     name = "Scott Barnett"
     description = "Technologist, Researcher and Engineer"
-    email = "scottnbarnett@gmail.com"
+    email = "scott.barnett@deakin.com"
     # phone = "+234 23 9873237"
     # address = "234 Hidden Pond Road, Ashland City, TN 37015"
     year = 2021
@@ -25,7 +25,7 @@ theme = "hugo-initio"
     showClients = true
 
     showFooterContact = true
-    showFooterFollowMe = false
+    showFooterFollowMe = true
     showFooterTextWidget = false
     showFooterFormWidget = false
 
@@ -34,11 +34,6 @@ theme = "hugo-initio"
     url = "/"
     weight = 1
   
-# [[menu.main]]
-#     name = "blog"
-#     url = "/post/"
-#     weight = 5
-
 # [params.disqus]
 #     site = "hugo-initio-site.disqus.com"
 
@@ -51,29 +46,36 @@ theme = "hugo-initio"
 
 [[params.social]]
 	title = "twitter"
-	url = "https://twitter.com/nickname"
+	url = "https://twitter.com/scottynb"
     icon = "fab fa-twitter-square"
     footer = true
     sharethis = true
     network = "twitter"
 [[params.social]]
 	title = "linkedin"
-	url = "https://www.linkedin.com/in/nickname"
+	url = "https://au.linkedin.com/in/scott-barnett-9b94b768"
     icon = "fab fa-linkedin"
-    footer = false
+    footer = true
     sharethis = true
     network = "linkedin"
 [[params.social]]
 	title = "github"
 	url = "https://github.com/nickname"
     icon = "fab fa-github"
-    footer = true
+    footer = false
     sharethis = false
     network = ""
 [[params.social]]
 	title = "email"
-	url = "mailto:scottnbarnett@gmail.com"
+	url = "mailto:scott.barnett@deakin.com"
     icon = "fas fa-envelope-square"
-    footer = false
+    footer = true
     sharethis = true
     network = "email"
+[[params.social]]
+	title = "scholar"
+	url = "https://scholar.google.com.au/citations?user=PJcpaRAAAAAJ&hl=en&oi=ao"
+    icon = "fab fa-google"
+    footer = true
+    sharethis = false
+    network = ""

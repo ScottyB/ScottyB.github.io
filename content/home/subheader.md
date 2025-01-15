@@ -3,8 +3,13 @@ type = "subheader"
 title = ""
 +++
 
-I am a Senior Research Fellow at the Applied Artificial Intelligence Instititue where I lead a team of engineers and researchers. My work prepares organisations for AI from ideation through to operations.
+I am an Associate Professor at the [Applied Artificial Intelligence
+Instititue](https://experts.deakin.edu.au/42177-scott-barnett) where I lead a
+team of software engineers and researchers.
 
-Please get in touch if you would like to collaborate. 
+#### For organisations
+I help society and organisations adapt to a world driven by Artificial Intelligence.
 
+#### For researchers
 
+My current research goal is to improve how we design, build, and test Large Language Model Applications.
