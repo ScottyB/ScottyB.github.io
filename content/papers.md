@@ -19,7 +19,7 @@ for identifying research problems in this space and presents lessons learned.
 **Quote from the paper**
 - *"Validation of a RAG system is only feasible during operation, and the robustness of a RAG system evolves rather than designed in at the start."*
 
-[**2. RAGProbe: An Automated Approach for Evaluating RAG Applications**](https://arxiv.org/pdf/2309.01379)
+[**2. RAGProbe: An Automated Approach for Evaluating RAG Applications**](https://arxiv.org/pdf/2409.19019)
 
 Builds upon the failure points paper by presenting evaluation scenarios, a
 systematic and automated method for evaluating RAG systems. The purpose of this
@@ -49,7 +49,7 @@ key idea was to generate semantically similar text without using similarity
 measures such as cosine similarity. This was to avoid the problems with
 embeddings representing a static concept of semantic relatedness. Precursor to RAGProbe.
 
-[**5. Mlguard: Defend your machine learning model!**](https://arxiv.org/pdf/2309.01379)
+[**5. MLGuard: Defend your machine learning model!**](https://arxiv.org/pdf/2309.01379)
 
 The key idea here is to adapt the concept of design by contract to machine
 learning based systems. Contracts could provide useful but are dependent on
