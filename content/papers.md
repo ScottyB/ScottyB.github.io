@@ -9,6 +9,17 @@ My full list of papers are available on [Google Scholar](https://scholar.google.
 
 ### Key works:
 
+
+[**0. Physics of AI**](/docs/Physics_of_AI.pdf)
+
+The non-negotiable constraints engineers must contend with when building AI
+systems (agentic, machine learning, and large language models). Always present
+but not always relevant the skill is knowing when. However there is good news.
+
+**Quote from the paper**
+- *"The Silver Lining: The Physics of AI impacts the engineering methodology and practices, not necessarily the outcome."*
+- Physics of AI denote a set of persistent regularities that shape how AI systems behave in practice. These regularities are not optional design choices but structural constraints that any engineering approach must design around.
+
 [**1. Seven Failure Points When Engineering a Retrieval Augmented Generation System**](https://arxiv.org/pdf/2401.05856)
 
 

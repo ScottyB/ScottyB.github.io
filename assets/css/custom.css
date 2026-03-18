@@ -1,0 +1,8 @@
+/* Override theme: use the global accent red (#bd1550) for all links,
+   including those in the hero header on the home page. */
+#head .title a {
+  color: #bd1550;
+}
+#head .tagline a {
+  color: #bd1550;
+}
