@@ -21,8 +21,13 @@ jobs:
           hugo-version: 'latest'
           # extended: true
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Build
-        run: hugo --minify
+        run: make build-prod
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4

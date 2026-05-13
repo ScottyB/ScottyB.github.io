@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentic Evaluation — Agentic Engineering Field Guide</title>
+  <link rel="preconnect" href="https://rsms.me/" />
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+  <style>
+    /* {{STYLE}} */
+  </style>
+</head>
+<body>
+  <header class="appbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="12" cy="12" r="6"  fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="12" cy="12" r="2"  fill="currentColor"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">Agentic Evaluation</div>
+        <div class="brand-sub">Agentic Engineering — what's going wrong, and what to try</div>
+      </div>
+    </div>
+    <div class="appbar-actions">
+      <button id="expand-all" class="ghost" type="button">Show everything</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="mandala-wrap">
+      <svg id="mandala" viewBox="0 0 560 560" role="img" aria-label="Theme map"></svg>
+      <div class="legend-hint">click a petal to jump to its problems · or use search</div>
+    </aside>
+
+    <section class="content-wrap">
+      <aside id="intro" class="intro" role="region" aria-label="About this tool">
+        <button id="intro-close" class="intro-close" type="button" aria-label="Dismiss intro">×</button>
+        <h2 class="intro-title">What is this?</h2>
+        <p class="intro-body">
+          A field guide for engineers and product managers building or running LLM agents.
+          It maps <strong>201 practitioner problems</strong> from a curated 2025–2026 bibliography
+          to <strong>11 symptom themes</strong>, shown as petals on the mandala.
+        </p>
+        <ul class="intro-how">
+          <li><strong>Browse</strong> — click a petal on the left to drop down its theme of problems.</li>
+          <li><strong>Search</strong> — type a pain point (e.g. <em>"judge scores keep changing"</em>) to filter across all 201 problems.</li>
+          <li><strong>Drill in</strong> — every card shows the problem, a suggested action, and a <strong>clickable link to the original 2025–2026 source</strong>.</li>
+        </ul>
+      </aside>
+
+      <div class="searchbar">
+        <input
+          id="q"
+          type="search"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+          placeholder="Describe your problem — e.g. judge scores keep changing"
+        />
+        <button id="clear" type="button" aria-label="Clear search">×</button>
+        <span id="hits" class="hits"></span>
+      </div>
+
+      <div id="sections" class="sections"></div>
+
+      <div id="empty" class="empty" hidden>
+        <strong>No problems matched.</strong>
+        <p>Try a shorter phrase, a single keyword, or click a petal in the map.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>201 problems across 11 themes, drawn from 43 curated 2025–2026 sources.</span>
+    <span class="ref">
+      Structural reference
+      (<a class="ref-link"
+          href="https://scottnbarnett.com/docs/Physics_of_AI.pdf"
+          target="_blank"
+          rel="noopener noreferrer">Physics-of-AI constraint</a>)
+      shown per card.
+    </span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script>
+    /* {{DATA}} */
+    /* {{APP}} */
+  </script>
+</body>
+</html>

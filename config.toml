@@ -33,7 +33,12 @@ theme = "hugo-initio"
     name = "Home"
     url = "/"
     weight = 1
-  
+
+[[menu.main]]
+    name = "Agentic Evaluation"
+    url = "/interactive/"
+    weight = 5
+
 # [params.disqus]
 #     site = "hugo-initio-site.disqus.com"
 
