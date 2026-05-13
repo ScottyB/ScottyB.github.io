@@ -16,7 +16,7 @@ const CSV_FILE      = join(__dirname, 'actions-v2.csv');
 const TEMPLATE_FILE = join(__dirname, 'template.html');
 const STYLE_FILE    = join(__dirname, 'src', 'style.css');
 const APP_FILE      = join(__dirname, 'src', 'app.js');
-const OUT_FILE      = join(__dirname, '..', 'static', 'interactive', 'index.html');
+const OUT_FILE      = join(__dirname, '..', '..', 'static', 'projects', 'agentic-evaluation', 'index.html');
 
 // ---------------------------------------------------------------------------
 // Source map (id → {name, url})
