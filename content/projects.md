@@ -5,6 +5,22 @@ type = "about"
 weight = 5
 +++
 
+### [AI in Manufacturing — Capability / Function Map](/projects/ai-manufacturing-map/)
+
+Manufacturers keep asking the same question: *AI sounds great, but where
+does it actually fit in my plant?*  The answer is scattered across vendor
+press releases, lighthouse reports, and customer stories that take days
+to read through.
+
+[**Open the interactive map**](/projects/ai-manufacturing-map/) — a
+force-directed graph of **34 real-world AI deployments** (BMW, Audi,
+Foxconn, Bosch, Siemens, Toyota, ABB, DeepMind and others), groupable
+two ways: by the **13 AI capability blocks** (Plan, Review, Search,
+Generate, Forecast, Simulate, …) or by **8 manufacturing functions**
+(Quality Inspection, Predictive Maintenance, Generative Design, Digital
+Twin, …). Click any node for the original problem, the AI technique
+used, the measured benefit, and a link to the source.
+
 ### [Agentic Evaluation](/projects/agentic-evaluation/)
 
 Everyone's shipping agents. Almost no one agrees on how to tell whether

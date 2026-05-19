@@ -6,7 +6,7 @@ theme = "hugo-initio"
 [params]
     name = "Scott Barnett"
     description = "Technologist, Researcher and Engineer"
-    email = "scott.barnett@deakin.com"
+    email = "scott.barnett@deakin.edu.au"
     # phone = "+234 23 9873237"
     # address = "234 Hidden Pond Road, Ashland City, TN 37015"
     year = 2021
@@ -58,13 +58,13 @@ theme = "hugo-initio"
     footer = true
     sharethis = true
     network = "linkedin"
-[[params.social]]
-	title = "github"
-	url = "https://github.com/nickname"
-    icon = "fab fa-github"
-    footer = false
-    sharethis = false
-    network = ""
+# [[params.social]]
+# 	title = "github"
+# 	url = "https://github.com/nickname"
+#     icon = "fab fa-github"
+#     footer = false
+#     sharethis = false
+#     network = ""
 [[params.social]]
 	title = "email"
 	url = "mailto:scott.barnett@deakin.com"

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI in Manufacturing — Capability / Function Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◧</span>
+      <span class="brand-text">
+        <span class="brand-title">AI · MANUFACTURING MAP</span>
+        <span class="brand-sub">34 deployments / 13 capabilities / 8 functions</span>
+      </span>
+    </div>
+
+    <div class="mode-switch" role="tablist" aria-label="View mode">
+      <button class="mode-btn is-active" data-mode="function" role="tab" aria-selected="true">
+        <span class="mode-num">08</span>
+        <span class="mode-label">Manufacturing Functions</span>
+      </button>
+      <button class="mode-btn" data-mode="capability" role="tab" aria-selected="false">
+        <span class="mode-num">13</span>
+        <span class="mode-label">AI Capabilities</span>
+      </button>
+    </div>
+
+    <div class="meta-spacer" aria-hidden="true"></div>
+  </header>
+
+  <main class="layout">
+    <section class="graph-frame">
+      <div class="graph-meta">
+        <span class="corner corner-tl"></span>
+        <span class="corner corner-tr"></span>
+        <span class="corner corner-bl"></span>
+        <span class="corner corner-br"></span>
+        <span class="frame-label" id="frame-label">FIG. 01 · MANUFACTURING FUNCTION → DEPLOYMENT</span>
+        <span class="frame-scale">SCALE: 1:1</span>
+      </div>
+      <svg id="graph" aria-label="Force-directed graph of AI capabilities and manufacturing deployments"></svg>
+      <div class="legend">
+        <span class="legend-item"><span class="dot dot-parent"></span>Category node</span>
+        <span class="legend-item"><span class="dot dot-example"></span>Deployment</span>
+        <span class="legend-item"><span class="dot dot-active"></span>Selected</span>
+      </div>
+    </section>
+
+    <aside class="panel" id="panel">
+      <div class="panel-header">
+        <span class="panel-tag" id="panel-tag">SELECT NODE</span>
+        <button class="panel-close" id="panel-close" aria-label="Reset selection" hidden>×</button>
+      </div>
+      <div class="panel-body" id="panel-body">
+        <div class="empty-state">
+          <p class="empty-instr">Click any <strong>category node</strong> to see its deployments, or click a <strong>deployment node</strong> for the full Problem / How / Benefit detail.</p>
+          <p class="empty-instr">Toggle the top switch to regroup the same 34 deployments by <strong>AI capability</strong> or by <strong>manufacturing function</strong>.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footbar">
+    <span>SOURCES · Vendor press releases · WEF Global Lighthouse Network · McKinsey · BCG</span>
+    <span>BUILT WITH D3.js · DATA · CSV</span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="app.js"></script>
+</body>
+</html>
