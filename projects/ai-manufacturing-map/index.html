@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI in Manufacturing — Capability / Function Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+/* ───────── Industrial design tokens (light / engineering-paper) ───────── */
+:root {
+  --bg: #f5f2ea;        /* warm cream — engineering paper */
+  --bg-grid: #e2dccb;   /* subtle grid line */
+  --panel: #faf7ef;     /* lighter cream */
+  --panel-2: #efe9da;   /* tinted panel */
+  --ink: #1a1d22;       /* near-black */
+  --ink-dim: #585c64;   /* medium gray */
+  --ink-faint: #8b8e92; /* light gray */
+  --line: #cfc8b6;      /* paper line */
+  --line-strong: #a8a08a; /* darker paper line */
+  --amber: #c97f0f;     /* tuned amber for light bg */
+  --amber-soft: #9a610a;
+  --steel: #2c6a99;
+  --steel-soft: #1d4e75;
+  --warn: #c74a1d;
+  --good: #4a8c46;
+  --hi: #8a5a05;
+
+  --mono: 'IBM Plex Mono', ui-monospace, 'JetBrains Mono', Consolas, monospace;
+  --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* ───────── Reset ───────── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background:
+    linear-gradient(var(--bg-grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1em;       /* inherits browser default (16px) */
+  line-height: 1.55;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--amber); text-decoration: none; border-bottom: 1px dotted var(--amber-soft); }
+a:hover { color: var(--hi); border-bottom-style: solid; }
+
+/* ───────── Top bar ───────── */
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line-strong);
+  background: linear-gradient(180deg, rgba(250,247,239,0.9), rgba(245,242,234,0.9));
+  backdrop-filter: blur(6px);
+  z-index: 10;
+  position: relative;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark {
+  font-size: 1.375em;     /* 22px */
+  color: var(--amber);
+  text-shadow: 0 0 10px rgba(201,127,15,0.25);
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-title { font-family: var(--mono); font-weight: 600; font-size: 0.9375em; letter-spacing: 0.18em; }     /* 15px */
+.brand-sub   { font-family: var(--mono); color: var(--ink-faint); font-size: 0.75em; letter-spacing: 0.15em; margin-top: 4px; } /* 12px */
+
+.mode-switch {
+  display: inline-flex;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: var(--panel);
+  overflow: hidden;
+}
+.mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--line);
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 0.8125em;    /* 13px */
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.mode-btn:last-child { border-right: 0; }
+.mode-btn:hover { color: var(--ink); background: var(--panel-2); }
+.mode-btn.is-active {
+  background: var(--amber);
+  color: #faf7ef;
+}
+.mode-btn.is-active .mode-num { color: #faf7ef; opacity: 0.85; }
+.mode-num {
+  font-weight: 600;
+  font-size: 1.23em;      /* 16px relative to .mode-btn 13px */
+  color: var(--amber);
+  opacity: 0.9;
+}
+.mode-label { text-transform: uppercase; }
+
+.meta { display: flex; gap: 16px; justify-content: flex-end; align-items: center; font-family: var(--mono); }
+.meta-row { display: flex; gap: 6px; align-items: baseline; font-size: 0.75em; letter-spacing: 0.12em; }       /* 12px */
+.meta-key { color: var(--ink-faint); }
+.meta-val { color: var(--ink); }
+
+/* ───────── Layout ───────── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  height: calc(100vh - 72px - 34px); /* topbar + footer */
+}
+
+/* ───────── Graph frame ───────── */
+.graph-frame {
+  position: relative;
+  overflow: hidden;
+  border-right: 1px solid var(--line-strong);
+}
+#graph {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.graph-meta {
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  z-index: 2;
+}
+.corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--line-strong);
+}
+.corner-tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.corner-tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.corner-bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.corner-br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+.frame-label {
+  position: absolute;
+  top: 4px; left: 28px;
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  color: var(--ink-faint);
+  letter-spacing: 0.18em;
+}
+.frame-scale {
+  position: absolute;
+  bottom: 4px; right: 28px;
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  color: var(--ink-faint);
+  letter-spacing: 0.18em;
+}
+.legend {
+  position: absolute;
+  bottom: 18px;
+  left: 28px;
+  display: flex;
+  gap: 18px;
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+  pointer-events: none;
+}
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.dot { display: inline-block; width: 8px; height: 8px; border: 1px solid var(--ink-faint); }
+.dot-parent { width: 12px; height: 12px; background: var(--steel); border-color: var(--steel-soft); }
+.dot-example { background: transparent; border-color: var(--ink-dim); }
+.dot-active { background: var(--amber); border-color: var(--amber); }
+
+/* ───────── SVG node + link styling ───────── */
+.link {
+  stroke: var(--line-strong);
+  stroke-opacity: 0.6;
+  stroke-width: 1;
+  transition: stroke .15s, stroke-opacity .15s;
+}
+.link.is-related { stroke: var(--amber-soft); stroke-opacity: 0.8; }
+.link.is-dim { stroke-opacity: 0.12; }
+
+.node { cursor: pointer; }
+.node-parent circle {
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  transition: filter .15s, stroke .15s;
+}
+.node-example circle {
+  fill: var(--panel-2);
+  stroke: var(--ink-dim);
+  stroke-width: 1;
+  transition: fill .15s, stroke .15s, r .15s;
+}
+.node.is-active circle {
+  stroke: var(--amber);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(201,127,15,0.45));
+}
+.node.is-related circle {
+  stroke: var(--amber);
+  stroke-width: 1.4;
+}
+.node.is-dim circle { opacity: 0.25; }
+
+text.label {
+  font-family: var(--mono);
+  fill: var(--ink);
+  pointer-events: none;
+  user-select: none;
+}
+text.label-parent {
+  font-size: 0.8125em;    /* 13px */
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+text.label-example {
+  font-size: 0.75em;      /* 12px */
+  letter-spacing: 0.04em;
+  fill: var(--ink-dim);
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity .15s;
+}
+
+/* Example labels reveal when the deployment node is hovered, active, in the selected
+   cluster (is-related), or in a hover-revealed cluster (is-hover-related). */
+.node-example:hover text.label-example,
+.node-example.is-active text.label-example,
+.node-example.is-related text.label-example,
+.node-example.is-hover-related text.label-example {
+  opacity: 1;
+}
+
+/* Parents stay readable even when dimmed by a selection elsewhere */
+.node-parent.is-dim text.label { opacity: 0.55; }
+
+/* ───────── Side panel ───────── */
+.panel {
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--panel-2);
+}
+.panel-tag {
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  letter-spacing: 0.2em;
+  color: var(--amber);
+  text-transform: uppercase;
+}
+.panel-close {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-dim);
+  width: 28px; height: 28px;
+  font-size: 1.125em;     /* 18px */
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: color .15s, border-color .15s;
+}
+.panel-close:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+}
+.panel-body::-webkit-scrollbar { width: 8px; }
+.panel-body::-webkit-scrollbar-track { background: var(--panel); }
+.panel-body::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 0; }
+
+.empty-state .empty-instr {
+  color: var(--ink-dim);
+  font-size: 0.875em;     /* 14px */
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.empty-state strong { color: var(--ink); font-weight: 500; }
+
+/* Category view (list of examples) */
+.cat-head {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.cat-head .cat-num {
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+}
+.cat-head .cat-name {
+  font-size: 1.25em;      /* 20px */
+  font-weight: 600;
+  margin-top: 6px;
+  line-height: 1.25;
+}
+.cat-head .cat-count {
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  color: var(--amber);
+  letter-spacing: 0.14em;
+  margin-top: 10px;
+}
+
+.cat-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.cat-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.cat-list-item:hover { border-color: var(--amber); background: rgba(201,127,15,0.06); }
+.cat-list-item .lst-num {
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+.cat-list-item .lst-co {
+  flex: 1;
+  font-weight: 500;
+}
+.cat-list-item .lst-cap {
+  font-family: var(--mono);
+  font-size: 0.6875em;    /* 11px */
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* Detail view (single example) */
+.detail .det-co {
+  font-size: 1.5em;       /* 24px */
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+.detail .det-url { font-family: var(--mono); font-size: 0.8125em; word-break: break-all; }                     /* 13px */
+.detail .det-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 20px;
+}
+.det-tag {
+  font-family: var(--mono);
+  font-size: 0.6875em;    /* 11px */
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  border: 1px solid var(--line-strong);
+  background: var(--panel-2);
+  color: var(--ink-dim);
+}
+.det-tag.is-cap { color: var(--steel); border-color: var(--steel-soft); }
+.det-tag.is-fn { color: var(--amber); border-color: var(--amber-soft); }
+
+.det-block { margin-bottom: 16px; }
+.det-block .det-key {
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+  display: block;
+  margin-bottom: 8px;
+}
+.det-block .det-val { color: var(--ink); font-size: 0.9375em; line-height: 1.6; }                              /* 15px */
+
+/* ───────── Tooltip ───────── */
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  letter-spacing: 0.1em;
+  background: #1a1d22;
+  color: #f5f2ea;
+  border: 1px solid #1a1d22;
+  padding: 7px 11px;
+  max-width: 340px;
+  z-index: 50;
+  transition: opacity .12s;
+}
+
+/* ───────── Foot bar ───────── */
+.footbar {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-top: 1px solid var(--line-strong);
+  background: var(--panel);
+  font-family: var(--mono);
+  font-size: 0.75em;      /* 12px */
+  letter-spacing: 0.14em;
+  color: var(--ink-faint);
+}
+
+/* ───────── Responsive (narrow) ───────── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+  .panel { border-top: 1px solid var(--line-strong); max-height: 45vh; }
+  .topbar { grid-template-columns: 1fr; gap: 8px; }
+  .meta { display: none; }
+}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◧</span>
+      <span class="brand-text">
+        <span class="brand-title">AI · MANUFACTURING MAP</span>
+        <span class="brand-sub">34 deployments / 13 capabilities / 8 functions</span>
+      </span>
+    </div>
+
+    <div class="mode-switch" role="tablist" aria-label="View mode">
+      <button class="mode-btn is-active" data-mode="function" role="tab" aria-selected="true">
+        <span class="mode-num">08</span>
+        <span class="mode-label">Manufacturing Functions</span>
+      </button>
+      <button class="mode-btn" data-mode="capability" role="tab" aria-selected="false">
+        <span class="mode-num">13</span>
+        <span class="mode-label">AI Capabilities</span>
+      </button>
+    </div>
+
+    <div class="meta-spacer" aria-hidden="true"></div>
+  </header>
+
+  <main class="layout">
+    <section class="graph-frame">
+      <div class="graph-meta">
+        <span class="corner corner-tl"></span>
+        <span class="corner corner-tr"></span>
+        <span class="corner corner-bl"></span>
+        <span class="corner corner-br"></span>
+        <span class="frame-label" id="frame-label">FIG. 01 · MANUFACTURING FUNCTION → DEPLOYMENT</span>
+        <span class="frame-scale">SCALE: 1:1</span>
+      </div>
+      <svg id="graph" aria-label="Force-directed graph of AI capabilities and manufacturing deployments"></svg>
+      <div class="legend">
+        <span class="legend-item"><span class="dot dot-parent"></span>Category node</span>
+        <span class="legend-item"><span class="dot dot-example"></span>Deployment</span>
+        <span class="legend-item"><span class="dot dot-active"></span>Selected</span>
+      </div>
+    </section>
+
+    <aside class="panel" id="panel">
+      <div class="panel-header">
+        <span class="panel-tag" id="panel-tag">SELECT NODE</span>
+        <button class="panel-close" id="panel-close" aria-label="Reset selection" hidden>×</button>
+      </div>
+      <div class="panel-body" id="panel-body">
+        <div class="empty-state">
+          <p class="empty-instr">Click any <strong>category node</strong> to see its deployments, or click a <strong>deployment node</strong> for the full Problem / How / Benefit detail.</p>
+          <p class="empty-instr">Toggle the top switch to regroup the same 34 deployments by <strong>AI capability</strong> or by <strong>manufacturing function</strong>.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footbar">
+    <span>SOURCES · Vendor press releases · WEF Global Lighthouse Network · McKinsey · BCG</span>
+    <span>BUILT WITH D3.js · DATA · CSV</span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script>window.__AI_MAP_DATA__ = [{"Company":"BMW Group","Url":"https://www.press.bmwgroup.com/global/article/detail/T0298650EN/fast-efficient-reliable:-artificial-intelligence-in-bmw-group-production","Problem":"Sequencing thousands of made-to-order vehicles into assembly is a brittle, manual planning job.","How I used":"A computer-vision \"car sorter\" identifies each vehicle by spec on the inbound line and assigns its assembly slot automatically.","Benefit":"Throughput rises and re-work falls because every car arrives at the right station in the right order.","Capability":"Plan & Schedule","Function":"Planning, forecasting & supply chain"},{"Company":"Unilever","Url":"https://www3.weforum.org/docs/WEF_Global_Lighthouse_Network_2023.pdf","Problem":"Demand volatility across 300+ factories breaks fixed production schedules.","How I used":"Demand-sensing ML ingests live POS, weather, and supplier signals to re-forecast continuously.","Benefit":"Schedules adapt within hours instead of weeks, cutting waste and stock-outs.","Capability":"Plan & Schedule","Function":"Planning, forecasting & supply chain"},{"Company":"Foxconn","Url":"https://blogs.nvidia.com/blog/electronics-giants-industrial-automation-nvidia-metropolis-for-factories/","Problem":"Manual QC on high-mix electronics lines is slow and inconsistent.","How I used":"Computer-vision models on NVIDIA Metropolis edge GPUs score every board for surface and assembly defects.","Benefit":"Defects are caught at line speed; manual sampling becomes obsolete.","Capability":"Review","Function":"Quality inspection & defect detection"},{"Company":"Audi","Url":"https://www.audi-mediacenter.com/en/press-releases/audi-begins-roll-out-of-artificial-intelligence-for-quality-control-of-spot-welds-15443","Problem":"Ultrasonic sampling of spot welds misses defects and only audits a fraction of joins.","How I used":"A CNN trained on labelled weld images scores every weld from in-line cameras.","Benefit":"~5 M welds per shift get full coverage at higher accuracy than ultrasonic testing.","Capability":"Review","Function":"Quality inspection & defect detection"},{"Company":"BMW Group","Url":"https://www.bmwgroup.com/en/news/general/2023/aiqx.html","Problem":"End-of-line quality gates catch defects too late; rework is expensive.","How I used":"Sensor and vision data feed an in-line AI platform that scores quality station-by-station.","Benefit":"Defects are flagged within seconds — well before final assembly — so rework cost drops.","Capability":"Review","Function":"Quality inspection & defect detection"},{"Company":"Siemens × Schaeffler","Url":"https://press.siemens.com/global/en/pressrelease/siemens-and-microsoft-partner-drive-cross-industry-ai-adoption","Problem":"Engineers lose hours searching technical docs, PLC code, and manuals.","How I used":"An LLM indexes specs, PLC code, and manuals; engineers query in natural language.","Benefit":"Answers surface in seconds, replacing manual document hunts.","Capability":"Search & Rank","Function":"Knowledge access & decision support"},{"Company":"Bosch","Url":"https://www.bosch.com/stories/agentic-ai-manufacturing-production/","Problem":"Frontline engineers can't find specs, manuals, or historical quality records fast enough.","How I used":"An agentic GenAI system retrieves from plant document stores and quality databases on demand.","Benefit":"~€850k annual savings reported at Bamberg from faster shopfloor decisions.","Capability":"Search & Rank","Function":"Knowledge access & decision support"},{"Company":"GM × Autodesk","Url":"https://www.autodesk.com/customer-stories/general-motors-generative-design","Problem":"Traditional CAD struggles to find optimal multi-part assemblies under weight and strength constraints.","How I used":"Generative-design algorithms explore thousands of topology variants under the same constraints.","Benefit":"8 components consolidated into 1 — 40% lighter and 20% stronger.","Capability":"Generate","Function":"Generative design & CAD"},{"Company":"Airbus","Url":"https://www.research.autodesk.com/projects/bionic-partition/","Problem":"Cabin partitions add weight, costing fuel across every flight, every aircraft.","How I used":"Generative algorithms optimised the load paths into a bionic lattice structure.","Benefit":"45% lighter partition — fuel savings compound fleet-wide.","Capability":"Generate","Function":"Generative design & CAD"},{"Company":"Siemens × Microsoft","Url":"https://news.siemens.com/en-us/nx-x-microsoft-azure/","Problem":"Designers manually produce design variants and technical documentation — slow and repetitive.","How I used":"AI Copilot integrated in NX (on Azure) generates variants and docs from natural-language prompts.","Benefit":"Design exploration and documentation shift from days to minutes.","Capability":"Generate","Function":"Generative design & CAD"},{"Company":"Toyota","Url":"https://cloud.google.com/blog/topics/hybrid-cloud/toyota-ai-platform-manufacturing-efficiency","Problem":"Line workers can't access the right corrective action fast enough when defects spike.","How I used":"An internal ML platform models each line's defect patterns and ranks corrective actions per worker.","Benefit":"Defects and downtime fall as personalised next-best-actions reach the right operator.","Capability":"Recommend & Personalise","Function":"Knowledge access & decision support"},{"Company":"Schneider Electric","Url":"https://www.se.com/uk/en/product-range/65708-ecostruxure-machine-advisor/","Problem":"Technicians get generic maintenance schedules disconnected from each machine's actual condition.","How I used":"Per-asset condition models prioritise tasks against live sensor data.","Benefit":"Each technician receives a list tailored to their specific machines' state.","Capability":"Recommend & Personalise","Function":"Predictive maintenance & asset health"},{"Company":"ABB","Url":"https://new.abb.com/process-automation/genix","Problem":"Operators, maintainers, and plant managers all need different answers from the same plant data.","How I used":"Role-aware filters and rankings expose different recommendations from one shared analytics layer.","Benefit":"Each user role sees actions matching their job, from one underlying data set.","Capability":"Recommend & Personalise","Function":"Knowledge access & decision support"},{"Company":"BMW Group","Url":"https://www.bmwgroup.com/en/news/general/2023/aiqx.html","Problem":"Different defect categories require different rework paths — manual triage is slow.","How I used":"Vision classifiers label defects in real time as surface, missing-component, or assembly anomaly.","Benefit":"Each defect routes automatically to the correct rework station as soon as it's seen.","Capability":"Classify & Group","Function":"Quality inspection & defect detection"},{"Company":"Foxconn × NVIDIA","Url":"https://blogs.nvidia.com/blog/electronics-giants-industrial-automation-nvidia-metropolis-for-factories/","Problem":"\"Solder\", \"missing component\", \"misalignment\" — each defect class needs different downstream handling.","How I used":"A multi-class vision model labels every PCB defect from line cameras.","Benefit":"Defects route to the right rework or scrap path without operator triage.","Capability":"Classify & Group","Function":"Quality inspection & defect detection"},{"Company":"Audi","Url":"https://www.audi-mediacenter.com/en/press-releases/audi-begins-roll-out-of-artificial-intelligence-for-quality-control-of-spot-welds-15443","Problem":"Ultrasonic sampling can't tell why a weld is poor — only that it is.","How I used":"A CNN classifies welds by failure mode (porosity, undersize, misalignment, etc.) from image data.","Benefit":"Engineers see the why of every defective weld, not just a pass/fail count.","Capability":"Classify & Group","Function":"Quality inspection & defect detection"},{"Company":"Siemens × Schaeffler","Url":"https://press.siemens.com/global/en/pressrelease/ai-industry-schaeffler-and-siemens-bring-industrial-copilot-shopfloor","Problem":"Fixing a PLC issue requires reading code, querying machine data, drafting a change, and deploying it — across multiple tools.","How I used":"An agentic Copilot chains tool calls across TIA Portal: code reader, data query, code generator, deployer.","Benefit":"A multi-step PLC fix collapses to a single conversation across plants.","Capability":"Orchestrate","Function":"Automation engineering"},{"Company":"Bridgestone","Url":"https://www.microsoft.com/en-us/microsoft-cloud/blog/manufacturing/2024/05/13/accelerating-industrial-transformation-with-ai/","Problem":"Answering \"why did OEE drop on Line 3 last shift?\" requires joining MES, ERP, and historian data manually.","How I used":"Agents call MES, ERP, and historian connectors, then combine the results into a natural-language answer.","Benefit":"Plant managers ask root-cause questions in plain English without engineering help.","Capability":"Orchestrate","Function":"Knowledge access & decision support"},{"Company":"Nissan","Url":"https://www.siemens.com/global/en/products/services/digital-enterprise-services/analytics-artificial-intelligence-services/senseye-predictive-maintenance.html","Problem":"Unplanned machine failures take whole lines down — far costlier than the failed part.","How I used":"ML models trained on each machine's signature predict failures hours-to-weeks ahead.","Benefit":"Reported >50% reduction in unplanned downtime across the line.","Capability":"Forecast","Function":"Predictive maintenance & asset health"},{"Company":"Unilever","Url":"https://www.unilever.com/news/news-search/2024/utilising-ai-to-redefine-the-future-of-customer-connectivity/","Problem":"SKU-level demand swings hit production planning, inventory, and supplier orders.","How I used":"ML forecasts SKU-level demand and ingredient consumption across the global factory network.","Benefit":"Production, inventory, and supplier orders stay in sync as demand shifts.","Capability":"Forecast","Function":"Planning, forecasting & supply chain"},{"Company":"Google DeepMind","Url":"https://deepmind.google/discover/blog/machine-learning-can-boost-the-value-of-wind-energy/","Problem":"Wind is intermittent — buyers can't commit to the grid 24h ahead without forecasts.","How I used":"A neural net predicts wind output 36 hours ahead from weather inputs.","Benefit":"Realised energy value lifts ~20%; industrial energy buyers adopt the forecasts.","Capability":"Forecast","Function":"Planning, forecasting & supply chain"},{"Company":"Siemens Digital Industries","Url":"https://www.microsoft.com/en/customers/story/1703499442875711080-siemens-digital-industries-software-microsoft-azure-ai-germany","Problem":"CAD, BOM, and spec data sits trapped in PLM files — hard to query, hard to compare.","How I used":"A generative-AI Copilot inside Teamcenter parses PLM content and exposes structured queries.","Benefit":"Engineers retrieve, compare, and extract engineering data conversationally.","Capability":"Transform & Structure","Function":"Knowledge access & decision support"},{"Company":"Google DeepMind","Url":"https://deepmind.google/discover/blog/deepmind-ai-reduces-google-data-centre-cooling-bill-by-40/","Problem":"Cooling is a huge, complex energy load — hand-tuned setpoints leave money on the table.","How I used":"A reinforcement-learning controller adjusts cooling setpoints continuously against live load.","Benefit":"Up to 40% reduction in cooling energy; the approach is licensed for industrial HVAC.","Capability":"Optimise","Function":"Process & energy optimization"},{"Company":"Ericsson","Url":"https://www3.weforum.org/docs/WEF_Global_Lighthouse_Network_2023.pdf","Problem":"Manual line balancing and material handling cap throughput per worker.","How I used":"AI re-balances the line and routes AGVs in real time over the plant's 5G network.","Benefit":"120% output-per-employee gain and 65% drop in manual material handling.","Capability":"Optimise","Function":"Process & energy optimization"},{"Company":"Schaeffler & thyssenkrupp","Url":"https://press.siemens.com/global/en/pressrelease/siemens-and-microsoft-partner-drive-cross-industry-ai-adoption","Problem":"Diagnosing a fault means stitching together PLC code, manuals, and error logs by hand.","How I used":"An LLM reasons jointly over PLC code, manuals, and error logs to propose causes.","Benefit":"Engineers receive a ranked cause-and-fix shortlist instead of starting from scratch.","Capability":"Reason & Infer","Function":"Automation engineering"},{"Company":"BMW Group","Url":"https://www.microsoft.com/en/customers/story/25683-bmw-ag-azure","Problem":"Mobile Data Recorder (MDR) test-drive datasets are vast and hard to query for edge cases.","How I used":"Azure OpenAI translates natural-language questions into MDR queries over the test-fleet data.","Benefit":"R&D engineers surface rare events and edge cases without writing query code.","Capability":"Reason & Infer","Function":"Knowledge access & decision support"},{"Company":"GE Vernova","Url":"https://www.ge.com/digital/applications/asset-performance-management-apm-software/industrial-data-diagnostics","Problem":"Engine and turbine anomalies look similar in raw telemetry — finding the real root cause is hard.","How I used":"ML models reason over correlated telemetry channels to infer the underlying failure mode.","Benefit":"Root cause is identified before the asset fails, not after.","Capability":"Reason & Infer","Function":"Predictive maintenance & asset health"},{"Company":"Siemens × Schaeffler","Url":"https://www.siemens.com/global/en/products/automation/topic-areas/tia/future-topics/industrial-copilot.html","Problem":"Writing SCL / ladder logic requires deep expertise and is slow even for senior engineers.","How I used":"An LLM tuned on TIA Portal generates and explains SCL / ladder logic from natural language.","Benefit":"Routine PLC code is drafted in minutes; senior expertise is reserved for the hard parts.","Capability":"Code","Function":"Automation engineering"},{"Company":"ABB","Url":"https://new.abb.com/news/detail/116279/abb-launches-next-generation-robotics-control-platform-omnicore","Problem":"Writing RAPID robot programs and trajectories offline is slow and error-prone.","How I used":"The OmniCore platform generates RAPID programs and offline trajectories from natural-language descriptions.","Benefit":"Robot programming time drops, with fewer trajectory bugs reaching the cell.","Capability":"Code","Function":"Automation engineering"},{"Company":"Rockwell × Microsoft","Url":"https://www.rockwellautomation.com/en-us/company/news/press-releases/Rockwell-Automation-and-Microsoft-Expand-Partnership-to-Leverage-Generative-AI-Capabilities-for-Enhanced-Productivity-and-Faster-Time-to-Market.html","Problem":"Translating plant logic into PLC code is a bottleneck for both engineers and OT teams.","How I used":"Copilot inside FactoryTalk Design Studio compiles plain-English logic into industrial control code.","Benefit":"OT teams ship control-logic changes without waiting on senior engineering.","Capability":"Code","Function":"Automation engineering"},{"Company":"BMW","Url":"https://blogs.nvidia.com/blog/bmw-group-nvidia-omniverse/","Problem":"Designing a new plant on paper hides clashes, ergonomics issues, and flow problems until build time.","How I used":"A full digital twin on NVIDIA Omniverse simulates the factory before any concrete is poured.","Benefit":"Planning cycle reduced ~30%; clashes and flow issues caught virtually.","Capability":"Simulate","Function":"Digital twin & simulation"},{"Company":"Foxconn","Url":"https://blogs.nvidia.com/blog/foxconn-blackwell-omniverse/","Problem":"Commissioning robots and workflows in a new EV factory is risky and time-consuming.","How I used":"Omniverse Blackwell simulates robot motion and worker ergonomics against the planned layout.","Benefit":"Deployment risk drops because issues surface in the twin, not on the floor.","Capability":"Simulate","Function":"Digital twin & simulation"},{"Company":"Unilever","Url":"https://news.microsoft.com/source/features/digital-transformation/now-its-personal-unilevers-digital-journey-leads-to-real-results-for-consumers-and-employees/","Problem":"Tweaking production parameters in the real plant means risking yield, energy, and quality.","How I used":"Live Azure Digital Twins of each factory replay parameter changes in simulation first.","Benefit":"1–3% productivity gains per site without risking actual yield.","Capability":"Simulate","Function":"Digital twin & simulation"},{"Company":"HD Hyundai","Url":"https://www.siemens.com/global/en/company/digital-transformation/industrial-metaverse/siemens-and-nvidia-partner-to-build-the-industrial-metaverse.html","Problem":"Ship-block production combines heavy logistics, welding, and assembly — high cost of error.","How I used":"Plant Simulation and Tecnomatix plug into Omniverse physics for a plant-scale digital twin.","Benefit":"Ship-block production plans are validated virtually before steel is cut.","Capability":"Simulate","Function":"Digital twin & simulation"}];</script>
+<script>
+/* AI · Manufacturing Map — force-directed graph
+   Toggle between AI Capability (13) and Manufacturing Function (8) parents.
+   Click a parent → list deployments; click a deployment → full detail. */
+
+const CAP_COLORS = {
+  "Plan & Schedule":       "#6ca0c4",
+  "Review":                "#f4a623",
+  "Search & Rank":         "#88b8a0",
+  "Generate":              "#d96b3a",
+  "Recommend & Personalise": "#b890c2",
+  "Classify & Group":      "#d3a847",
+  "Orchestrate":           "#5e8aa8",
+  "Forecast":              "#9bc6a0",
+  "Transform & Structure": "#c89066",
+  "Optimise":              "#7fb6c0",
+  "Reason & Infer":        "#c4796b",
+  "Code":                  "#a8a37e",
+  "Simulate":              "#9ba8c4",
+};
+
+const FN_COLORS = {
+  "Quality inspection & defect detection": "#f4a623",
+  "Predictive maintenance & asset health": "#6ca0c4",
+  "Planning, forecasting & supply chain":  "#9bc6a0",
+  "Generative design & CAD":               "#d96b3a",
+  "Knowledge access & decision support":   "#b890c2",
+  "Automation engineering":                "#a8a37e",
+  "Digital twin & simulation":             "#7fb6c0",
+  "Process & energy optimization":         "#c89066",
+};
+
+let DATA = [];
+let mode = "function"; // "capability" | "function"
+let simulation;
+let nodes = [];
+let links = [];
+let selectedId = null;
+
+const svg = d3.select("#graph");
+const tooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+
+let width = 0, height = 0;
+const root = svg.append("g").attr("class", "root");
+const gLinks = root.append("g").attr("class", "links");
+const gNodes = root.append("g").attr("class", "nodes");
+
+function colorFor(name) {
+  return (mode === "capability" ? CAP_COLORS : FN_COLORS)[name] || "#8893a0";
+}
+
+function buildModel() {
+  const parentKey = mode === "capability" ? "Capability" : "Function";
+  const parentNames = Array.from(new Set(DATA.map(d => d[parentKey])));
+
+  // Preserve example node positions across mode toggles by reusing IDs.
+  const exampleNodesById = new Map(nodes.filter(n => n.type === "example").map(n => [n.id, n]));
+
+  const newNodes = [
+    ...parentNames.map(name => {
+      const existing = nodes.find(n => n.id === `p::${name}`);
+      return existing
+        ? Object.assign(existing, { type: "parent", name, group: name })
+        : { id: `p::${name}`, type: "parent", name, group: name };
+    }),
+    ...DATA.map((d, i) => {
+      const id = `e::${i}`;
+      const reused = exampleNodesById.get(id);
+      const base = reused || { id };
+      return Object.assign(base, {
+        type: "example",
+        name: d.Company,
+        group: d[parentKey],
+        data: d,
+      });
+    })
+  ];
+
+  const newLinks = DATA.map((d, i) => ({
+    source: `p::${d[parentKey]}`,
+    target: `e::${i}`,
+  }));
+
+  nodes = newNodes;
+  links = newLinks;
+}
+
+function render() {
+  // Links
+  const link = gLinks.selectAll("line").data(links, d =>
+    (typeof d.source === "object" ? d.source.id : d.source) + "→" +
+    (typeof d.target === "object" ? d.target.id : d.target)
+  );
+  link.exit().remove();
+  link.enter().append("line").attr("class", "link");
+
+  // Nodes (each group = <g> with circle + label)
+  const node = gNodes.selectAll("g.node").data(nodes, d => d.id);
+  node.exit().remove();
+
+  const nodeEnter = node.enter()
+    .append("g")
+    .attr("class", d => `node node-${d.type}`)
+    .call(drag(simulationProxy))
+    .on("click", (event, d) => { event.stopPropagation(); select(d); })
+    .on("mouseenter", (event, d) => { showTooltip(event, d); if (!selectedId) setHover(d); })
+    .on("mousemove", moveTooltip)
+    .on("mouseleave", () => { hideTooltip(); if (!selectedId) clearHover(); });
+
+  nodeEnter.append("circle");
+  nodeEnter.append("text").attr("class", d => `label label-${d.type}`);
+
+  const nodeAll = nodeEnter.merge(node);
+
+  nodeAll.attr("class", d => `node node-${d.type}` + (selectedId && d.id === selectedId ? " is-active" : ""));
+
+  nodeAll.select("circle")
+    .attr("r", d => d.type === "parent" ? parentRadius(d) : 6)
+    .attr("fill", d => d.type === "parent" ? colorFor(d.group) : "transparent")
+    .attr("stroke", d => d.type === "parent" ? d3.color(colorFor(d.group)).darker(0.8) : "#9aa0a8");
+
+  nodeAll.select("text")
+    .text(d => d.type === "parent" ? d.name : d.name)
+    .attr("text-anchor", "middle")
+    .attr("dy", d => d.type === "parent" ? parentRadius(d) + 14 : 18);
+
+  // Restart simulation with new model
+  simulation.nodes(nodes);
+  simulation.force("link").links(links);
+  simulation.alpha(0.9).restart();
+}
+
+function parentRadius(d) {
+  const n = links.filter(l => {
+    const src = typeof l.source === "object" ? l.source.id : l.source;
+    return src === d.id;
+  }).length;
+  return 18 + n * 2.4;
+}
+
+let simulationProxy = () => simulation;
+
+function tick() {
+  gLinks.selectAll("line")
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+  gNodes.selectAll("g.node")
+    .attr("transform", d => `translate(${d.x},${d.y})`);
+}
+
+function initSimulation() {
+  simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(d => d.id).distance(d =>
+      d.target.type === "example" ? 78 : 110
+    ).strength(0.45))
+    .force("charge", d3.forceManyBody().strength(d => d.type === "parent" ? -420 : -110))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collide", d3.forceCollide().radius(d => d.type === "parent" ? parentRadius(d) + 14 : 18))
+    .force("x", d3.forceX(width / 2).strength(0.035))
+    .force("y", d3.forceY(height / 2).strength(0.04))
+    .on("tick", tick);
+}
+
+function drag(simRef) {
+  return d3.drag()
+    .on("start", (event, d) => {
+      if (!event.active) simRef().alphaTarget(0.3).restart();
+      d.fx = d.x; d.fy = d.y;
+    })
+    .on("drag", (event, d) => { d.fx = event.x; d.fy = event.y; })
+    .on("end", (event, d) => {
+      if (!event.active) simRef().alphaTarget(0);
+      d.fx = null; d.fy = null;
+    });
+}
+
+/* ─── Selection / panel ─── */
+function select(d) {
+  selectedId = d.id;
+  highlight(d);
+  if (d.type === "parent") renderCategoryPanel(d);
+  else renderExamplePanel(d);
+}
+
+function deselect() {
+  selectedId = null;
+  gNodes.selectAll("g.node")
+    .classed("is-active", false)
+    .classed("is-related", false)
+    .classed("is-dim", false)
+    .classed("is-hover-related", false);
+  gLinks.selectAll("line").classed("is-related", false).classed("is-dim", false);
+  renderEmptyPanel();
+}
+
+function setHover(d) {
+  const ids = new Set([d.id]);
+  links.forEach(l => {
+    const src = typeof l.source === "object" ? l.source.id : l.source;
+    const tgt = typeof l.target === "object" ? l.target.id : l.target;
+    if (d.type === "parent" && src === d.id) ids.add(tgt);
+    if (d.type === "example" && tgt === d.id) ids.add(src);
+  });
+  gNodes.selectAll("g.node").classed("is-hover-related", n => ids.has(n.id));
+}
+
+function clearHover() {
+  gNodes.selectAll("g.node").classed("is-hover-related", false);
+}
+
+function highlight(d) {
+  const id = d.id;
+  const relatedNodeIds = new Set([id]);
+  const relatedLinks = new Set();
+
+  if (d.type === "parent") {
+    links.forEach(l => {
+      const src = typeof l.source === "object" ? l.source.id : l.source;
+      const tgt = typeof l.target === "object" ? l.target.id : l.target;
+      if (src === id) {
+        relatedNodeIds.add(tgt);
+        relatedLinks.add(l);
+      }
+    });
+  } else {
+    // example node — find its parent
+    links.forEach(l => {
+      const src = typeof l.source === "object" ? l.source.id : l.source;
+      const tgt = typeof l.target === "object" ? l.target.id : l.target;
+      if (tgt === id) {
+        relatedNodeIds.add(src);
+        relatedLinks.add(l);
+      }
+    });
+  }
+
+  gNodes.selectAll("g.node")
+    .classed("is-active", n => n.id === id)
+    .classed("is-related", n => n.id !== id && relatedNodeIds.has(n.id))
+    .classed("is-dim", n => !relatedNodeIds.has(n.id));
+  gLinks.selectAll("line")
+    .classed("is-related", l => relatedLinks.has(l))
+    .classed("is-dim", l => !relatedLinks.has(l));
+}
+
+/* ─── Panel renderers ─── */
+const panelTag = document.getElementById("panel-tag");
+const panelBody = document.getElementById("panel-body");
+const panelClose = document.getElementById("panel-close");
+
+panelClose.addEventListener("click", deselect);
+
+function renderEmptyPanel() {
+  panelTag.textContent = "SELECT NODE";
+  panelClose.hidden = true;
+  panelBody.innerHTML = `
+    <div class="empty-state">
+      <p class="empty-instr">Click any <strong>category node</strong> to see its deployments, or click a <strong>deployment node</strong> for the full Problem / How / Benefit detail.</p>
+      <p class="empty-instr">Toggle the top switch to regroup the same 34 deployments by <strong>AI capability</strong> or by <strong>manufacturing function</strong>.</p>
+    </div>`;
+}
+
+function renderCategoryPanel(d) {
+  panelTag.textContent = mode === "capability" ? "AI CAPABILITY" : "MANUFACTURING FUNCTION";
+  panelClose.hidden = false;
+  const items = DATA
+    .map((row, i) => ({ row, i }))
+    .filter(({ row }) => (mode === "capability" ? row.Capability : row.Function) === d.name);
+
+  const li = items.map(({ row, i }, idx) => `
+    <li class="cat-list-item" data-ex="${i}">
+      <span class="lst-num">${String(idx + 1).padStart(2, "0")}</span>
+      <span>
+        <span class="lst-co">${escapeHtml(row.Company)}</span>
+        <span class="lst-cap">${escapeHtml(mode === "capability" ? row.Function : row.Capability)}</span>
+      </span>
+    </li>`).join("");
+
+  panelBody.innerHTML = `
+    <div class="cat-head">
+      <div class="cat-num">${mode === "capability" ? "CAPABILITY" : "FUNCTION"}</div>
+      <h2 class="cat-name">${escapeHtml(d.name)}</h2>
+      <div class="cat-count">${items.length} DEPLOYMENT${items.length === 1 ? "" : "S"}</div>
+    </div>
+    <ul class="cat-list">${li}</ul>`;
+
+  panelBody.querySelectorAll(".cat-list-item").forEach(el => {
+    el.addEventListener("click", () => {
+      const idx = +el.dataset.ex;
+      const node = nodes.find(n => n.id === `e::${idx}`);
+      if (node) select(node);
+    });
+  });
+}
+
+function renderExamplePanel(d) {
+  panelTag.textContent = "DEPLOYMENT DETAIL";
+  panelClose.hidden = false;
+  const r = d.data;
+  panelBody.innerHTML = `
+    <div class="detail">
+      <h2 class="det-co">${escapeHtml(r.Company)}</h2>
+      <a class="det-url" href="${escapeAttr(r.Url)}" target="_blank" rel="noopener">${escapeHtml(shortUrl(r.Url))}</a>
+      <div class="det-tags">
+        <span class="det-tag is-cap">CAP · ${escapeHtml(r.Capability)}</span>
+        <span class="det-tag is-fn">FN · ${escapeHtml(r.Function)}</span>
+      </div>
+      <div class="det-block">
+        <span class="det-key">PROBLEM</span>
+        <div class="det-val">${escapeHtml(r.Problem)}</div>
+      </div>
+      <div class="det-block">
+        <span class="det-key">HOW AI WAS USED</span>
+        <div class="det-val">${escapeHtml(r["How I used"])}</div>
+      </div>
+      <div class="det-block">
+        <span class="det-key">BENEFIT</span>
+        <div class="det-val">${escapeHtml(r.Benefit)}</div>
+      </div>
+    </div>`;
+}
+
+/* ─── Tooltip ─── */
+function showTooltip(event, d) {
+  const txt = d.type === "parent"
+    ? `${d.name.toUpperCase()} · ${linksCount(d)} DEPLOYMENTS`
+    : `${d.data.Company} — ${(d.data["How I used"] || "").slice(0, 60)}…`;
+  tooltip.html(escapeHtml(txt)).style("opacity", 1);
+  moveTooltip(event);
+}
+function moveTooltip(event) {
+  tooltip.style("left", (event.clientX + 14) + "px").style("top", (event.clientY + 14) + "px");
+}
+function hideTooltip() { tooltip.style("opacity", 0); }
+function linksCount(d) {
+  return links.filter(l => (typeof l.source === "object" ? l.source.id : l.source) === d.id).length;
+}
+
+/* ─── Helpers ─── */
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+function shortUrl(u) {
+  try { return new URL(u).hostname.replace(/^www\./, ""); }
+  catch { return u; }
+}
+
+/* ─── Mode switch ─── */
+document.querySelectorAll(".mode-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (btn.classList.contains("is-active")) return;
+    document.querySelectorAll(".mode-btn").forEach(b => {
+      b.classList.toggle("is-active", b === btn);
+      b.setAttribute("aria-selected", b === btn);
+    });
+    mode = btn.dataset.mode;
+    document.getElementById("frame-label").textContent =
+      mode === "function"
+        ? "FIG. 01 · MANUFACTURING FUNCTION → DEPLOYMENT"
+        : "FIG. 02 · AI CAPABILITY → DEPLOYMENT";
+    selectedId = null;
+    buildModel();
+    render();
+    renderEmptyPanel();
+  });
+});
+
+/* ─── Background click to deselect ─── */
+svg.on("click", () => { if (selectedId) deselect(); });
+
+/* ─── Resize ─── */
+function resize() {
+  const rect = svg.node().getBoundingClientRect();
+  width = rect.width; height = rect.height;
+  if (simulation) {
+    simulation.force("center", d3.forceCenter(width / 2, height / 2));
+    simulation.force("x", d3.forceX(width / 2).strength(0.035));
+    simulation.force("y", d3.forceY(height / 2).strength(0.04));
+    simulation.alpha(0.4).restart();
+  }
+}
+window.addEventListener("resize", resize);
+
+/* ─── Bootstrap ─── */
+function init(rows) {
+  DATA = rows;
+  resize();
+  initSimulation();
+  buildModel();
+  render();
+}
+
+if (typeof window.__AI_MAP_DATA__ !== "undefined") {
+  // Production build: data is inlined into the bundled HTML by build.mjs
+  init(window.__AI_MAP_DATA__);
+} else {
+  // Dev mode: fetch CSV from the same directory
+  d3.csv("data.csv").then(init).catch(err => {
+    console.error("Failed to load data.csv", err);
+    panelBody.innerHTML = `<div class="empty-state"><p class="empty-instr">⚠ Could not load <code>data.csv</code>. Serve this folder over HTTP (eg. <code>python -m http.server</code>) rather than opening the file directly.</p></div>`;
+  });
+}
+
+</script>
+</body>
+</html>

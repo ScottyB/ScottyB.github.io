@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Scott Barnett</title><link>https://scottnbarnett.com/</link><description>Recent content on Scott Barnett</description><generator>Hugo</generator><language>en-us</language><atom:link href="https://scottnbarnett.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://scottnbarnett.com/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://scottnbarnett.com/projects/</guid><description>&lt;h3 id="agentic-evaluation"&gt;&lt;a href="https://scottnbarnett.com/projects/agentic-evaluation/"&gt;Agentic Evaluation&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;Everyone&amp;rsquo;s shipping agents. Almost no one agrees on how to tell whether
-they actually work. If you&amp;rsquo;re a software engineer or product manager
-trying to take an LLM agent past a flashy demo, the playbook is being
-written in real time - and scattered across blog posts, papers, and
-postmortems you don&amp;rsquo;t have time to read.&lt;/p&gt;
-&lt;p&gt;&lt;a href="https://scottnbarnett.com/projects/agentic-evaluation/"&gt;&lt;strong&gt;Open the interactive guide&lt;/strong&gt;&lt;/a&gt; It
-distils &lt;strong&gt;201 pieces of practitioner advice&lt;/strong&gt; into &lt;strong&gt;11 key challenges&lt;/strong&gt;
-judge reliability, observability, the offline-to-production gap, cost
-and capacity, and more each linking back to the original 2025–2026
-source. This is a snapshot as of &lt;strong&gt;12 May 2026&lt;/strong&gt;.&lt;/p&gt;</description></item><item><title>Publications</title><link>https://scottnbarnett.com/papers/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://scottnbarnett.com/papers/</guid><description>&lt;p&gt;My full list of papers are available on &lt;a href="https://scholar.google.com.au/citations?user=PJcpaRAAAAAJ&amp;amp;hl=en&amp;amp;oi=ao"&gt;Google Scholar&lt;/a&gt;.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Scott Barnett</title><link>https://scottnbarnett.com/</link><description>Recent content on Scott Barnett</description><generator>Hugo</generator><language>en-us</language><atom:link href="https://scottnbarnett.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Projects</title><link>https://scottnbarnett.com/projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://scottnbarnett.com/projects/</guid><description>&lt;h3 id="ai-in-manufacturing--capability--function-map"&gt;&lt;a href="https://scottnbarnett.com/projects/ai-manufacturing-map/"&gt;AI in Manufacturing — Capability / Function Map&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Manufacturers keep asking the same question: &lt;em&gt;AI sounds great, but where
+does it actually fit in my plant?&lt;/em&gt; The answer is scattered across vendor
+press releases, lighthouse reports, and customer stories that take days
+to read through.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://scottnbarnett.com/projects/ai-manufacturing-map/"&gt;&lt;strong&gt;Open the interactive map&lt;/strong&gt;&lt;/a&gt; — a
+force-directed graph of &lt;strong&gt;34 real-world AI deployments&lt;/strong&gt; (BMW, Audi,
+Foxconn, Bosch, Siemens, Toyota, ABB, DeepMind and others), groupable
+two ways: by the &lt;strong&gt;13 AI capability blocks&lt;/strong&gt; (Plan, Review, Search,
+Generate, Forecast, Simulate, …) or by &lt;strong&gt;8 manufacturing functions&lt;/strong&gt;
+(Quality Inspection, Predictive Maintenance, Generative Design, Digital
+Twin, …). Click any node for the original problem, the AI technique
+used, the measured benefit, and a link to the source.&lt;/p&gt;</description></item><item><title>Publications</title><link>https://scottnbarnett.com/papers/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://scottnbarnett.com/papers/</guid><description>&lt;p&gt;My full list of papers are available on &lt;a href="https://scholar.google.com.au/citations?user=PJcpaRAAAAAJ&amp;amp;hl=en&amp;amp;oi=ao"&gt;Google Scholar&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="key-works"&gt;Key works:&lt;/h3&gt;
 &lt;p&gt;&lt;a href="https://scottnbarnett.com/docs/Physics_of_AI.pdf"&gt;&lt;strong&gt;0. Physics of AI&lt;/strong&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The non-negotiable constraints engineers must contend with when building AI
