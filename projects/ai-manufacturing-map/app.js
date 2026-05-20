@@ -119,7 +119,7 @@ function render() {
     .attr("stroke", d => d.type === "parent" ? d3.color(colorFor(d.group)).darker(0.8) : "#9aa0a8");
 
   nodeAll.select("text")
-    .text(d => d.type === "parent" ? d.name : d.name)
+    .text(d => d.type === "parent" ? labelText(d.name) : d.name)
     .attr("text-anchor", "middle")
     .attr("dy", d => d.type === "parent" ? parentRadius(d) + 14 : 18);
 
@@ -149,16 +149,45 @@ function tick() {
     .attr("transform", d => `translate(${d.x},${d.y})`);
 }
 
+/* Viewport-aware spacing — phones get tighter clusters so labels and nodes fit. */
+function scale() {
+  if (width >= 900) return 1.0;     // desktop / large
+  if (width >= 600) return 0.7;     // tablet
+  return 0.5;                        // phone
+}
+function centerStrength() {
+  return width < 600 ? 0.06 : 0.035;
+}
+function isMobile() { return width < 600; }
+
+/* Abbreviate long category labels on phone — full name still in the panel. */
+const SHORT_LABEL = {
+  "Quality inspection & defect detection": "Quality",
+  "Predictive maintenance & asset health": "Maintenance",
+  "Planning, forecasting & supply chain":  "Planning",
+  "Generative design & CAD":               "Design",
+  "Knowledge access & decision support":   "Knowledge",
+  "Automation engineering":                "Automation",
+  "Digital twin & simulation":             "Digital twin",
+  "Process & energy optimization":         "Optimisation",
+  "Recommend & Personalise":               "Recommend",
+  "Transform & Structure":                 "Transform",
+};
+function labelText(name) {
+  return isMobile() ? (SHORT_LABEL[name] || name) : name;
+}
+
 function initSimulation() {
+  const s = scale();
   simulation = d3.forceSimulation()
     .force("link", d3.forceLink().id(d => d.id).distance(d =>
-      d.target.type === "example" ? 78 : 110
+      (d.target.type === "example" ? 78 : 110) * s
     ).strength(0.45))
-    .force("charge", d3.forceManyBody().strength(d => d.type === "parent" ? -420 : -110))
+    .force("charge", d3.forceManyBody().strength(d => (d.type === "parent" ? -420 : -110) * s))
     .force("center", d3.forceCenter(width / 2, height / 2))
-    .force("collide", d3.forceCollide().radius(d => d.type === "parent" ? parentRadius(d) + 14 : 18))
-    .force("x", d3.forceX(width / 2).strength(0.035))
-    .force("y", d3.forceY(height / 2).strength(0.04))
+    .force("collide", d3.forceCollide().radius(d => (d.type === "parent" ? parentRadius(d) + 14 : 18) * s))
+    .force("x", d3.forceX(width / 2).strength(centerStrength()))
+    .force("y", d3.forceY(height / 2).strength(centerStrength() + 0.005))
     .on("tick", tick);
 }
 
@@ -176,11 +205,14 @@ function drag(simRef) {
 }
 
 /* ─── Selection / panel ─── */
+const panelEl = document.getElementById("panel");
+
 function select(d) {
   selectedId = d.id;
   highlight(d);
   if (d.type === "parent") renderCategoryPanel(d);
   else renderExamplePanel(d);
+  panelEl.classList.add("is-open"); // bottom-sheet on mobile; no-op on desktop
 }
 
 function deselect() {
@@ -192,6 +224,7 @@ function deselect() {
     .classed("is-hover-related", false);
   gLinks.selectAll("line").classed("is-related", false).classed("is-dim", false);
   renderEmptyPanel();
+  panelEl.classList.remove("is-open");
 }
 
 function setHover(d) {
@@ -375,10 +408,14 @@ function resize() {
   const rect = svg.node().getBoundingClientRect();
   width = rect.width; height = rect.height;
   if (simulation) {
+    const s = scale();
+    simulation.force("link").distance(d => (d.target.type === "example" ? 78 : 110) * s);
+    simulation.force("charge").strength(d => (d.type === "parent" ? -420 : -110) * s);
+    simulation.force("collide").radius(d => (d.type === "parent" ? parentRadius(d) + 14 : 18) * s);
     simulation.force("center", d3.forceCenter(width / 2, height / 2));
-    simulation.force("x", d3.forceX(width / 2).strength(0.035));
-    simulation.force("y", d3.forceY(height / 2).strength(0.04));
-    simulation.alpha(0.4).restart();
+    simulation.force("x", d3.forceX(width / 2).strength(centerStrength()));
+    simulation.force("y", d3.forceY(height / 2).strength(centerStrength() + 0.005));
+    simulation.alpha(0.6).restart();
   }
 }
 window.addEventListener("resize", resize);
